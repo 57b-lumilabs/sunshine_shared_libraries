@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.depsmanagement.android.application)
-    alias(libs.plugins.depsmanagement.android.application.compose)
-    alias(libs.plugins.depsmanagement.android.hilt)
+    alias(libs.plugins.sharedlibraries.android.application)
+    alias(libs.plugins.sharedlibraries.android.application.compose)
+    alias(libs.plugins.sharedlibraries.android.hilt)
 }
 
 android {

@@ -58,12 +58,12 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Base convention plugins
-depsmanagement-android-application = { id = "sharedlibraries.android.application", version = "unspecified" }
-depsmanagement-android-application-compose = { id = "sharedlibraries.android.application.compose", version = "unspecified" }
-depsmanagement-android-hilt = { id = "sharedlibraries.android.hilt", version = "unspecified" }
-depsmanagement-android-library = { id = "sharedlibraries.android.library", version = "unspecified" }
-depsmanagement-android-library-compose = { id = "sharedlibraries.android.library.compose", version = "unspecified" }
-depsmanagement-jvm-library = { id = "sharedlibraries.jvm.library", version = "unspecified" }
+sharedlibraries-android-application = { id = "sharedlibraries.android.application", version = "unspecified" }
+sharedlibraries-android-application-compose = { id = "sharedlibraries.android.application.compose", version = "unspecified" }
+sharedlibraries-android-hilt = { id = "sharedlibraries.android.hilt", version = "unspecified" }
+sharedlibraries-android-library = { id = "sharedlibraries.android.library", version = "unspecified" }
+sharedlibraries-android-library-compose = { id = "sharedlibraries.android.library.compose", version = "unspecified" }
+sharedlibraries-jvm-library = { id = "sharedlibraries.jvm.library", version = "unspecified" }
 
 [bundles]
 
