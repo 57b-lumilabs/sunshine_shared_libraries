@@ -18,3 +18,4 @@ rootProject.name = "Sunshine Shared Libraries"
 include(":app")
 include(":interappcommunication:infrastructure")
 include(":interappcommunication:datasource")
+include(":interappcommunication:model")
