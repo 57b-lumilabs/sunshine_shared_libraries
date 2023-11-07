@@ -4,7 +4,9 @@ package com.lumilabs.sunshine.sharedlibraries.interappcommunication.infrastructu
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentials
 
 interface InterAppCredentialsRepository {
-    suspend fun retrieveInterAppCredentials(): InterAppCredentials?
+    suspend fun retrieveInterAppCredentials(
+        packageNames: List<String>
+    ): InterAppCredentials?
 
     suspend fun saveInterAppCredentials(
         contactUserId: String?,

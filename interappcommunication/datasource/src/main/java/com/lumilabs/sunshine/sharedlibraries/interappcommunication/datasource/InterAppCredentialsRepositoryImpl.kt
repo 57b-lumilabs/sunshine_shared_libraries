@@ -18,15 +18,20 @@ class InterAppCredentialsRepositoryImpl(
     private val contentResolver: ContentResolver,
 ) : InterAppCredentialsRepository {
 
-    override suspend fun retrieveInterAppCredentials(): InterAppCredentials? {
-        val credentialsFromStorage = retrieveCredentialsFromStorageDataSource()
-        if (credentialsFromStorage != null) {
-            return credentialsFromStorage
+    override suspend fun retrieveInterAppCredentials(
+        packageNames: List<String>
+    ): InterAppCredentials? {
+        val fromStorage = retrieveCredentialsFromStorageDataSource()
+        if (fromStorage != null) {
+            return fromStorage
         }
-        val credentialsFromCR = retrieveCredentialsFromContentResolver()
-        if (credentialsFromCR != null) {
-            return credentialsFromCR
+        for (name in packageNames) {
+            val fromContentResolver = retrieveCredentialsFromContentResolver(name)
+            if (fromContentResolver != null) {
+                return fromContentResolver
+            }
         }
+
         return null
     }
 
@@ -69,10 +74,12 @@ class InterAppCredentialsRepositoryImpl(
         }
     }
 
-    private fun retrieveCredentialsFromContentResolver(): InterAppCredentials? {
+    private fun retrieveCredentialsFromContentResolver(
+        packageName: String,
+    ): InterAppCredentials? {
         return contentResolver.query(
             // TODO: Fill uriString dynamically
-            Uri.parse("content://com.lumilabs.android.mouse.staging.InterAppContentProvider/access"),
+            Uri.parse("content://$packageName.InterAppContentProvider/access"),
             null, null, null, null
         )?.use { it.convertToInterAppCredentials() }
     }
