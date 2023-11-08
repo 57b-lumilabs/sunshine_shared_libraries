@@ -5,4 +5,8 @@ data class InterAppCredentials(
     val firebaseUserId: String,
     val firebaseToken: String,
     val phoneNumberOrFirebaseUserId: String
-)
+) {
+    override fun toString(): String {
+        return "InterAppCredentials with hash code = ${this.hashCode()}"
+    }
+}
