@@ -3,9 +3,11 @@ package com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource.c
 import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.MatrixCursor
-
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentials
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.*
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsError
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsResult
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsSuccess
 
 fun MatrixCursor.fillWithInterAppCredentials(credentials: InterAppCredentials) {
     this.newRow()
@@ -16,8 +18,8 @@ fun MatrixCursor.fillWithInterAppCredentials(credentials: InterAppCredentials) {
 }
 
 @SuppressLint("Range")
-fun Cursor?.convertToInterAppCredentials(): InterAppCredentials? {
-    if (this == null) return null
+fun Cursor?.convertToInterAppCredentials(): RetrieveCredentialsResult {
+    if (this == null) return RetrieveCredentialsError.NoCredentialsFound
     return try {
         if (this.moveToFirst()) {
             val contactUserId = this.getString(this.getColumnIndex(CONTACT_USER_ID.value))
@@ -26,14 +28,16 @@ fun Cursor?.convertToInterAppCredentials(): InterAppCredentials? {
             val phoneNumberOrFirebaseUserId =
                 this.getString(this.getColumnIndex(PHONE_NUMBER_OR_FIREBASE_USER_ID.value))
 
-            InterAppCredentials(
-                contactUserId = contactUserId,
-                firebaseUserId = firebaseUserId,
-                firebaseToken = firebaseToken,
-                phoneNumberOrFirebaseUserId = phoneNumberOrFirebaseUserId
+            RetrieveCredentialsSuccess.FromContentResolver(
+                InterAppCredentials(
+                    contactUserId = contactUserId,
+                    firebaseUserId = firebaseUserId,
+                    firebaseToken = firebaseToken,
+                    phoneNumberOrFirebaseUserId = phoneNumberOrFirebaseUserId
+                )
             )
-        } else null
+        } else RetrieveCredentialsError.NoCredentialsFound
     } catch (e: Exception) {
-        null
+        RetrieveCredentialsError.ContentResolverConversion(e)
     }
 }
