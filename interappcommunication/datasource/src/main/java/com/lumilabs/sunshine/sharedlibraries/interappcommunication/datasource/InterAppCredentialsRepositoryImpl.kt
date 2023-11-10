@@ -63,7 +63,9 @@ class InterAppCredentialsRepositoryImpl(
 
             val phoneNumberOrFirebaseUserId = contactPrimaryMobile ?: firebaseUserId
 
-            // TODO: Test enabling end to end encryption
+            // It was decided with the client not to enforce end-to-end encryption:
+            // https://57blocks.slack.com/archives/CRFUY2G14/p1699551274913989
+            // This decision is due to observed intermittent failures on some devices.
             storageDataSource.apply {
                 saveString(
                     CONTACT_USER_ID.value,
