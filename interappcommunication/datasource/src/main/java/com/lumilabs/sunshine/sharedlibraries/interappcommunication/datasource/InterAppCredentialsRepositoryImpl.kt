@@ -10,7 +10,7 @@ import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAp
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_USER_ID
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_TOKEN
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_USER_ID
-import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.PHONE_NUMBER_OR_FIREBASE_USER_ID
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_PRIMARY_MOBILE
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsError
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsResult
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsSuccess
@@ -61,8 +61,6 @@ class InterAppCredentialsRepositoryImpl(
             val firebaseToken = firebaseUser?.getIdToken(false)?.await()?.token
             val firebaseUserId = firebaseUser?.uid
 
-            val phoneNumberOrFirebaseUserId = contactPrimaryMobile ?: firebaseUserId
-
             // It was decided with Vishal not to enforce end-to-end encryption:
             // https://57blocks.slack.com/archives/CRFUY2G14/p1699551274913989
             // This decision is due to constant and common false negatives
@@ -83,11 +81,13 @@ class InterAppCredentialsRepositoryImpl(
                     firebaseToken!!,
                     requireEndToEndEncryption = false
                 )
-                saveString(
-                    PHONE_NUMBER_OR_FIREBASE_USER_ID.value,
-                    phoneNumberOrFirebaseUserId!!,
-                    requireEndToEndEncryption = false
-                )
+                contactPrimaryMobile?.let { primaryMobile ->
+                    saveString(
+                        CONTACT_PRIMARY_MOBILE.value,
+                        primaryMobile,
+                        requireEndToEndEncryption = false
+                    )
+                }
             }
             SaveCredentialsResult.SaveSuccess
         } catch (e: Exception) {
@@ -114,14 +114,13 @@ class InterAppCredentialsRepositoryImpl(
             val contactUserId = storageDataSource.readString(CONTACT_USER_ID.value)
             val firebaseUserId = storageDataSource.readString(FIREBASE_USER_ID.value)
             val firebaseToken = storageDataSource.readString(FIREBASE_TOKEN.value)
-            val phoneNumberOrFirebaseUserId =
-                storageDataSource.readString(PHONE_NUMBER_OR_FIREBASE_USER_ID.value)
+            val contactPrimaryMobile = storageDataSource.readString(CONTACT_PRIMARY_MOBILE.value)
             RetrieveCredentialsSuccess.FromStorage(
                 InterAppCredentials(
                     contactUserId = contactUserId!!,
                     firebaseUserId = firebaseUserId!!,
                     firebaseToken = firebaseToken!!,
-                    phoneNumberOrFirebaseUserId = phoneNumberOrFirebaseUserId!!
+                    contactPrimaryMobile = contactPrimaryMobile
                 )
             )
         } catch (e: Exception) {

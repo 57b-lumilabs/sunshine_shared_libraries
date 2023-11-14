@@ -14,7 +14,7 @@ fun MatrixCursor.fillWithInterAppCredentials(credentials: InterAppCredentials) {
         .add(credentials.contactUserId)
         .add(credentials.firebaseUserId)
         .add(credentials.firebaseToken)
-        .add(credentials.phoneNumberOrFirebaseUserId)
+        .add(credentials.contactPrimaryMobile)
 }
 
 @SuppressLint("Range")
@@ -25,15 +25,18 @@ fun Cursor?.convertToInterAppCredentials(): RetrieveCredentialsResult {
             val contactUserId = this.getString(this.getColumnIndex(CONTACT_USER_ID.value))
             val firebaseUserId = this.getString(this.getColumnIndex(FIREBASE_USER_ID.value))
             val firebaseToken = this.getString(this.getColumnIndex(FIREBASE_TOKEN.value))
-            val phoneNumberOrFirebaseUserId =
-                this.getString(this.getColumnIndex(PHONE_NUMBER_OR_FIREBASE_USER_ID.value))
+            val contactPrimaryMobile = try {
+                this.getString(this.getColumnIndex(CONTACT_PRIMARY_MOBILE.value))
+            } catch (e: Exception) {
+                null
+            }
 
             RetrieveCredentialsSuccess.FromContentResolver(
                 InterAppCredentials(
                     contactUserId = contactUserId,
                     firebaseUserId = firebaseUserId,
                     firebaseToken = firebaseToken,
-                    phoneNumberOrFirebaseUserId = phoneNumberOrFirebaseUserId
+                    contactPrimaryMobile = contactPrimaryMobile
                 )
             )
         } else RetrieveCredentialsError.NoCredentialsFound

@@ -11,7 +11,7 @@ import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAp
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_USER_ID
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_TOKEN
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_USER_ID
-import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.PHONE_NUMBER_OR_FIREBASE_USER_ID
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_PRIMARY_MOBILE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -35,7 +35,7 @@ open class InterAppContentProvider : ContentProvider() {
                         CONTACT_USER_ID.value,
                         FIREBASE_USER_ID.value,
                         FIREBASE_TOKEN.value,
-                        PHONE_NUMBER_OR_FIREBASE_USER_ID.value
+                        CONTACT_PRIMARY_MOBILE.value
                     )
                 )
 
