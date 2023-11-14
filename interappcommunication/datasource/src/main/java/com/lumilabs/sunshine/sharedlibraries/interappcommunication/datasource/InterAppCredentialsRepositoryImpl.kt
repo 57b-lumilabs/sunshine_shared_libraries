@@ -4,13 +4,14 @@ import android.content.ContentResolver
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource.converters.convertToInterAppCredentials
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource.formatters.addCountryCodeIfMissing
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.infrastructure.BackupEnabledKeyValueStorageDataSource
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.infrastructure.InterAppCredentialsRepository
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentials
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_PRIMARY_MOBILE
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_USER_ID
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_TOKEN
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_USER_ID
-import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_PRIMARY_MOBILE
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsError
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsResult
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsSuccess
@@ -114,7 +115,12 @@ class InterAppCredentialsRepositoryImpl(
             val contactUserId = storageDataSource.readString(CONTACT_USER_ID.value)
             val firebaseUserId = storageDataSource.readString(FIREBASE_USER_ID.value)
             val firebaseToken = storageDataSource.readString(FIREBASE_TOKEN.value)
-            val contactPrimaryMobile = storageDataSource.readString(CONTACT_PRIMARY_MOBILE.value)
+            val contactPrimaryMobile = try {
+                storageDataSource.readString(CONTACT_PRIMARY_MOBILE.value)
+                    ?.addCountryCodeIfMissing()
+            } catch (e: Exception) {
+                null
+            }
             RetrieveCredentialsSuccess.FromStorage(
                 InterAppCredentials(
                     contactUserId = contactUserId!!,

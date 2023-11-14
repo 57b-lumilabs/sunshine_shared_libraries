@@ -3,6 +3,7 @@ package com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource.c
 import android.annotation.SuppressLint
 import android.database.Cursor
 import android.database.MatrixCursor
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource.formatters.addCountryCodeIfMissing
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentials
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.*
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsError
@@ -27,6 +28,7 @@ fun Cursor?.convertToInterAppCredentials(): RetrieveCredentialsResult {
             val firebaseToken = this.getString(this.getColumnIndex(FIREBASE_TOKEN.value))
             val contactPrimaryMobile = try {
                 this.getString(this.getColumnIndex(CONTACT_PRIMARY_MOBILE.value))
+                    .addCountryCodeIfMissing()
             } catch (e: Exception) {
                 null
             }
