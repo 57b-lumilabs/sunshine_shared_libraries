@@ -12,6 +12,7 @@ import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAp
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.CONTACT_USER_ID
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_TOKEN
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.InterAppCredentialsKeys.FIREBASE_USER_ID
+import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.DeleteCredentialsResult
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsError
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsResult
 import com.lumilabs.sunshine.sharedlibraries.interappcommunication.model.result.RetrieveCredentialsSuccess
@@ -93,6 +94,16 @@ class InterAppCredentialsRepositoryImpl(
             SaveCredentialsResult.SaveSuccess
         } catch (e: Exception) {
             SaveCredentialsResult.Error(e)
+        }
+    }
+
+    override suspend fun clearInterAppCredentials(): DeleteCredentialsResult {
+        return try {
+            if (storageDataSource.clearStrings())
+                DeleteCredentialsResult.DeleteSuccess
+            else DeleteCredentialsResult.DeleteError(null)
+        } catch (e: Exception) {
+            DeleteCredentialsResult.DeleteError(e)
         }
     }
 

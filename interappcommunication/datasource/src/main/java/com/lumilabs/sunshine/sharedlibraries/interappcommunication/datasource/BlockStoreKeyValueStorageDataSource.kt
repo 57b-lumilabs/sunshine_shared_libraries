@@ -2,6 +2,7 @@ package com.lumilabs.sunshine.sharedlibraries.interappcommunication.datasource
 
 import android.content.Context
 import com.google.android.gms.auth.blockstore.Blockstore
+import com.google.android.gms.auth.blockstore.DeleteBytesRequest
 import com.google.android.gms.auth.blockstore.RetrieveBytesRequest
 import com.google.android.gms.auth.blockstore.RetrieveBytesResponse
 import com.google.android.gms.auth.blockstore.StoreBytesData
@@ -49,6 +50,26 @@ class BlockStoreKeyValueStorageDataSource(
                     resultDeferred.complete(null)
                 }
             }
+
+        return resultDeferred.await()
+    }
+
+    override suspend fun clearStrings(): Boolean {
+        val resultDeferred = CompletableDeferred<Boolean>()
+
+        client.deleteBytes(
+            DeleteBytesRequest.Builder()
+                .setDeleteAll(true)
+                .build()
+        ).addOnSuccessListener { result: Boolean ->
+            resultDeferred.complete(result)
+        }.addOnFailureListener { e: Exception? ->
+            e?.let {
+                resultDeferred.completeExceptionally(e)
+            } ?: run {
+                resultDeferred.complete(false)
+            }
+        }
 
         return resultDeferred.await()
     }

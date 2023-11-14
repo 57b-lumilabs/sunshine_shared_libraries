@@ -3,4 +3,6 @@ package com.lumilabs.sunshine.sharedlibraries.interappcommunication.infrastructu
 interface BackupEnabledKeyValueStorageDataSource {
     suspend fun saveString(key: String, value: String, requireEndToEndEncryption: Boolean): Boolean
     suspend fun readString(key: String): String?
+
+    suspend fun clearStrings(): Boolean
 }
