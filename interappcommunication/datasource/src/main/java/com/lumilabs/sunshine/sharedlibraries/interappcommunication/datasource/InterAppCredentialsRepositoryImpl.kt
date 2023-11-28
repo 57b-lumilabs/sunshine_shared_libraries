@@ -60,7 +60,7 @@ class InterAppCredentialsRepositoryImpl(
     ): SaveCredentialsResult {
         return try {
             val firebaseUser = FirebaseAuth.getInstance().currentUser
-            val firebaseToken = firebaseUser?.getIdToken(false)?.await()?.token
+            val firebaseToken = firebaseUser?.getIdToken(true)?.await()?.token
             val firebaseUserId = firebaseUser?.uid
 
             // It was decided with Vishal not to enforce end-to-end encryption:
